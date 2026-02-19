@@ -42,18 +42,18 @@ export default function Wallet() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Wallet</h1>
-        <p className="text-gray-600 mt-1">Manage your HaulHub balance</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Wallet</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your HaulHub balance</p>
       </div>
 
       {depositStatus === 'success' && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-sm text-green-800">
+        <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-sm text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-400">
           ✓ Your deposit was successful! Funds will appear in your balance shortly.
         </div>
       )}
 
       {depositStatus === 'cancelled' && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-sm text-yellow-800">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-sm text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-300">
           Your deposit was cancelled. No charges were made.
         </div>
       )}
@@ -65,19 +65,19 @@ export default function Wallet() {
           <p className="text-3xl font-bold">${wallet?.available_balance}</p>
           <p className="text-brand-200 text-xs mt-2">Available to spend on jobs</p>
         </div>
-        <div className="card bg-yellow-50 border-yellow-200">
-          <p className="text-yellow-700 text-sm mb-1">In Escrow</p>
-          <p className="text-3xl font-bold text-yellow-800">${wallet?.escrow_balance}</p>
-          <p className="text-yellow-600 text-xs mt-2">Locked for active bookings</p>
+        <div className="card bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800">
+          <p className="text-yellow-700 dark:text-yellow-400 text-sm mb-1">In Escrow</p>
+          <p className="text-3xl font-bold text-yellow-800 dark:text-yellow-300">${wallet?.escrow_balance}</p>
+          <p className="text-yellow-600 dark:text-yellow-500 text-xs mt-2">Locked for active bookings</p>
         </div>
       </div>
 
       {/* Deposit form */}
       <div className="card">
-        <h2 className="font-semibold text-gray-900 mb-4">Add Funds</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Funds</h2>
         <div className="flex gap-3">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
             <input
               type="number"
               min="1"
@@ -96,31 +96,31 @@ export default function Wallet() {
             {depositMutation.isPending ? 'Redirecting...' : 'Deposit via Stripe'}
           </button>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
           Secure payments powered by Stripe. Funds appear in your balance after payment confirmation.
         </p>
       </div>
 
       {/* Transaction history */}
       <div className="card">
-        <h2 className="font-semibold text-gray-900 mb-4">Transaction History</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Transaction History</h2>
         {wallet?.transactions.length === 0 && (
-          <p className="text-sm text-gray-500 text-center py-8">No transactions yet.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">No transactions yet.</p>
         )}
         <div className="space-y-3">
           {wallet?.transactions.map((tx) => (
-            <div key={tx.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+            <div key={tx.id} className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
               <div className="flex items-center gap-3">
                 <span className="text-lg">{transactionIcon[tx.transaction_type] || '💳'}</span>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{tx.description}</p>
-                  <p className="text-xs text-gray-500">{format(new Date(tx.created_at), 'MMM d, yyyy · HH:mm')}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{tx.description}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{format(new Date(tx.created_at), 'MMM d, yyyy · HH:mm')}</p>
                 </div>
               </div>
               <span className={`text-sm font-semibold ${
                 tx.transaction_type === 'deposit' || tx.transaction_type === 'escrow_release'
-                  ? 'text-green-600'
-                  : 'text-gray-700'
+                  ? 'text-green-600 dark:text-green-400'
+                  : 'text-gray-700 dark:text-gray-300'
               }`}>
                 {tx.transaction_type === 'deposit' || (tx.transaction_type === 'escrow_release')
                   ? `+$${tx.amount}`

@@ -28,8 +28,8 @@ export default function Board() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Job Board</h1>
-        <p className="text-gray-600 mt-1">Browse open jobs and apply to the ones that fit you.</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Job Board</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Browse open jobs and apply to the ones that fit you.</p>
       </div>
 
       {/* Category filter */}
@@ -38,10 +38,10 @@ export default function Board() {
           <button
             key={value}
             onClick={() => setCategory(value)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
               category === value
                 ? 'bg-brand-600 text-white'
-                : 'bg-white text-gray-700 border border-gray-300 hover:border-brand-400'
+                : 'bg-white text-gray-700 border border-gray-300 hover:border-brand-400 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:border-brand-400'
             }`}
           >
             {label}
@@ -54,14 +54,14 @@ export default function Board() {
       {!isLoading && jobs?.length === 0 && (
         <div className="card text-center py-16">
           <p className="text-4xl mb-4">🔍</p>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No open jobs right now</h3>
-          <p className="text-gray-600">Check back soon — new jobs are posted regularly.</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No open jobs right now</h3>
+          <p className="text-gray-600 dark:text-gray-400">Check back soon — new jobs are posted regularly.</p>
         </div>
       )}
 
       {jobs && jobs.length > 0 && (
         <div>
-          <p className="text-sm text-gray-500 mb-4">{jobs.length} open job{jobs.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{jobs.length} open job{jobs.length !== 1 ? 's' : ''}</p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {jobs.map((job) => <JobCard key={job.id} job={job} />)}
           </div>

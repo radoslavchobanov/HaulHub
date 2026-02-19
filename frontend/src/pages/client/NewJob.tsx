@@ -40,8 +40,8 @@ export default function NewJob() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Post a New Job</h1>
-        <p className="text-gray-600 mt-1">Describe your job and Haulers will apply to help you.</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Post a New Job</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Describe your job and Haulers will apply to help you.</p>
       </div>
 
       <div className="card">
@@ -82,7 +82,7 @@ export default function NewJob() {
             <div>
               <label className="label">Budget (USD)</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
                 <input
                   {...register('budget', {
                     required: 'Budget is required',
@@ -119,7 +119,7 @@ export default function NewJob() {
           </div>
 
           {mutation.isError && (
-            <p className="text-sm text-red-600 bg-red-50 rounded-lg p-3">
+            <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg p-3">
               {(mutation.error as any)?.response?.data?.detail || 'Failed to post job. Please try again.'}
             </p>
           )}

@@ -25,12 +25,12 @@ export default function RegisterType() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 w-full max-w-md">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 w-full max-w-md">
         <div className="text-center mb-8">
           <span className="text-4xl">🚛</span>
-          <h1 className="text-2xl font-bold text-gray-900 mt-4">Welcome, {state.first_name}!</h1>
-          <p className="text-gray-600 mt-2">One last step — how will you use HaulHub?</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-4">Welcome, {state.first_name}!</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">One last step — how will you use HaulHub?</p>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-8">
@@ -38,17 +38,17 @@ export default function RegisterType() {
             <button
               key={type}
               onClick={() => setUserType(type)}
-              className={`flex flex-col items-center p-5 rounded-xl border-2 transition-all ${
+              className={`flex flex-col items-center p-5 rounded-xl border-2 transition-all cursor-pointer ${
                 userType === type
-                  ? 'border-brand-600 bg-brand-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? 'border-brand-600 bg-brand-50 dark:bg-brand-900/20'
+                  : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
               }`}
             >
               <span className="text-3xl mb-2">{type === 'client' ? '📦' : '💪'}</span>
-              <span className="font-semibold text-sm">
+              <span className="font-semibold text-sm dark:text-gray-200">
                 {type === 'client' ? 'I need help' : 'I want to work'}
               </span>
-              <span className="text-xs text-gray-500 text-center mt-1">
+              <span className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
                 {type === 'client' ? 'Post jobs for Haulers' : 'Pick up jobs & earn'}
               </span>
             </button>
@@ -56,7 +56,7 @@ export default function RegisterType() {
         </div>
 
         {mutation.isError && (
-          <p className="text-sm text-red-600 bg-red-50 rounded-lg p-3 mb-4">
+          <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg p-3 mb-4">
             Something went wrong. Please try again.
           </p>
         )}

@@ -19,8 +19,8 @@ export default function Dashboard() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Jobs</h1>
-          <p className="text-gray-600 mt-1">Manage your posted jobs</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Jobs</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your posted jobs</p>
         </div>
         <Link to="/jobs/new" className="btn-primary">
           + Post a Job
@@ -30,15 +30,15 @@ export default function Dashboard() {
       {jobs?.length === 0 && (
         <div className="card text-center py-16">
           <p className="text-4xl mb-4">📋</p>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No jobs posted yet</h3>
-          <p className="text-gray-600 mb-6">Post your first job and get help from trusted Haulers.</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No jobs posted yet</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">Post your first job and get help from trusted Haulers.</p>
           <Link to="/jobs/new" className="btn-primary">Post your first job</Link>
         </div>
       )}
 
       {active.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Active Jobs</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Active Jobs</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {active.map((job) => <JobCard key={job.id} job={job} linkTo={`/jobs/${job.id}`} />)}
           </div>
@@ -47,7 +47,7 @@ export default function Dashboard() {
 
       {past.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Past Jobs</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Past Jobs</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {past.map((job) => <JobCard key={job.id} job={job} linkTo={`/jobs/${job.id}`} />)}
           </div>

@@ -54,8 +54,8 @@ export default function EditProfile() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
-        <p className="text-gray-600 mt-1">A great profile helps you get hired faster.</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Profile</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">A great profile helps you get hired faster.</p>
       </div>
 
       <div className="card">
@@ -78,10 +78,10 @@ export default function EditProfile() {
                   key={skill}
                   type="button"
                   onClick={() => toggleSkill(skill)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
                     selectedSkills.includes(skill)
                       ? 'bg-brand-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
                   {skill}
@@ -91,7 +91,7 @@ export default function EditProfile() {
           </div>
 
           {mutation.isError && (
-            <p className="text-sm text-red-600 bg-red-50 rounded-lg p-3">
+            <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg p-3">
               Failed to update profile. Please try again.
             </p>
           )}

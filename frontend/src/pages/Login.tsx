@@ -52,14 +52,14 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link to="/" className="flex justify-center items-center gap-2 mb-6">
           <span className="text-3xl">🚛</span>
           <span className="text-2xl font-bold text-brand-700">HaulHub</span>
         </Link>
-        <h2 className="text-center text-2xl font-bold text-gray-900">Sign in to your account</h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Sign in to your account</h2>
+        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
           Don't have an account?{' '}
           <Link to="/register" className="font-medium text-brand-600 hover:text-brand-500">
             Sign up for free
@@ -68,7 +68,7 @@ export default function Login() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow-sm rounded-xl border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 py-8 px-6 shadow-sm rounded-xl border border-gray-200 dark:border-gray-700">
           <form onSubmit={handleSubmit((data) => loginMutation.mutate(data))} className="space-y-4">
             <div>
               <label className="label">Email</label>
@@ -93,7 +93,7 @@ export default function Login() {
             </div>
 
             {loginMutation.isError && (
-              <p className="text-sm text-red-600 bg-red-50 rounded-lg p-3">
+              <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg p-3">
                 {(loginMutation.error as any)?.response?.data?.non_field_errors?.[0] || 'Invalid email or password.'}
               </p>
             )}
@@ -106,10 +106,10 @@ export default function Login() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-gray-300 dark:border-gray-600" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">Or continue with</span>
               </div>
             </div>
 

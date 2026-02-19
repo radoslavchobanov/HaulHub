@@ -57,21 +57,21 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link to="/" className="flex justify-center items-center gap-2 mb-6">
           <span className="text-3xl">🚛</span>
           <span className="text-2xl font-bold text-brand-700">HaulHub</span>
         </Link>
-        <h2 className="text-center text-2xl font-bold text-gray-900">Create your account</h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Create your account</h2>
+        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
           Already have one?{' '}
           <Link to="/login" className="font-medium text-brand-600 hover:text-brand-500">Sign in</Link>
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow-sm rounded-xl border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 py-8 px-6 shadow-sm rounded-xl border border-gray-200 dark:border-gray-700">
           {/* Account type toggle */}
           <div className="mb-6">
             <label className="label">I want to...</label>
@@ -81,8 +81,8 @@ export default function Register() {
                   key={type}
                   className={`flex flex-col items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${
                     userType === type
-                      ? 'border-brand-600 bg-brand-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-brand-600 bg-brand-50 dark:bg-brand-900/20'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                   }`}
                 >
                   <input
@@ -92,10 +92,10 @@ export default function Register() {
                     className="sr-only"
                   />
                   <span className="text-2xl mb-1">{type === 'client' ? '📦' : '💪'}</span>
-                  <span className="font-medium text-sm">
+                  <span className="font-medium text-sm dark:text-gray-200">
                     {type === 'client' ? 'Hire Haulers' : 'Work as a Hauler'}
                   </span>
-                  <span className="text-xs text-gray-500 text-center mt-0.5">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 text-center mt-0.5">
                     {type === 'client' ? 'Post jobs & get help' : 'Find jobs & earn'}
                   </span>
                 </label>
@@ -153,7 +153,7 @@ export default function Register() {
             </div>
 
             {mutation.isError && (
-              <p className="text-sm text-red-600 bg-red-50 rounded-lg p-3">
+              <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg p-3">
                 {(mutation.error as any)?.response?.data?.email?.[0] ||
                   (mutation.error as any)?.response?.data?.password?.[0] ||
                   'Registration failed. Please try again.'}
@@ -168,10 +168,10 @@ export default function Register() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-gray-300 dark:border-gray-600" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">Or continue with</span>
               </div>
             </div>
             <div className="mt-4 flex justify-center">

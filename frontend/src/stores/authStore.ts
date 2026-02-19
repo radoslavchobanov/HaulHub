@@ -14,17 +14,15 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
       accessToken: null,
       refreshToken: null,
-      get isAuthenticated() {
-        return !!get().accessToken
-      },
+      isAuthenticated: false,
       setAuth: (user, tokens) =>
-        set({ user, accessToken: tokens.access, refreshToken: tokens.refresh }),
+        set({ user, accessToken: tokens.access, refreshToken: tokens.refresh, isAuthenticated: true }),
       setUser: (user) => set({ user }),
-      logout: () => set({ user: null, accessToken: null, refreshToken: null }),
+      logout: () => set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false }),
     }),
     {
       name: 'haulhub-auth',

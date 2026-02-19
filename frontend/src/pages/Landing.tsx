@@ -53,9 +53,9 @@ export default function Landing() {
       </section>
 
       {/* How it works */}
-      <section className="px-6 py-16 bg-white">
+      <section className="px-6 py-16 bg-white dark:bg-gray-900">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">How it works</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">How it works</h2>
           <div className="grid md:grid-cols-2 gap-12">
             <div>
               <h3 className="text-xl font-semibold text-brand-700 mb-6">For Clients</h3>
@@ -71,8 +71,8 @@ export default function Landing() {
                       {step}
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900">{title}</p>
-                      <p className="text-sm text-gray-600">{desc}</p>
+                      <p className="font-semibold text-gray-900 dark:text-gray-100">{title}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{desc}</p>
                     </div>
                   </div>
                 ))}
@@ -92,8 +92,8 @@ export default function Landing() {
                       {step}
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900">{title}</p>
-                      <p className="text-sm text-gray-600">{desc}</p>
+                      <p className="font-semibold text-gray-900 dark:text-gray-100">{title}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{desc}</p>
                     </div>
                   </div>
                 ))}
@@ -104,14 +104,14 @@ export default function Landing() {
       </section>
 
       {/* Categories */}
-      <section className="px-6 py-16 bg-gray-50">
+      <section className="px-6 py-16 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-10">What can Haulers help with?</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-10">What can Haulers help with?</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {categories.map(({ icon, label }) => (
               <div key={label} className="card text-center hover:shadow-md transition-shadow">
                 <div className="text-3xl mb-2">{icon}</div>
-                <p className="text-sm font-medium text-gray-700">{label}</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</p>
               </div>
             ))}
           </div>

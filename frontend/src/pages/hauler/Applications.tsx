@@ -20,22 +20,22 @@ export default function Applications() {
   return (
     <div className="space-y-8 max-w-3xl">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">My Applications</h1>
-        <p className="text-gray-600 mt-1">Track your job applications</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Applications</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Track your job applications</p>
       </div>
 
       {applications?.length === 0 && (
         <div className="card text-center py-16">
           <p className="text-4xl mb-4">📝</p>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No applications yet</h3>
-          <p className="text-gray-600 mb-6">Browse the job board and apply to jobs that interest you.</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No applications yet</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">Browse the job board and apply to jobs that interest you.</p>
           <Link to="/board" className="btn-primary">Browse Jobs</Link>
         </div>
       )}
 
       {accepted.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Accepted ({accepted.length})</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Accepted ({accepted.length})</h2>
           <div className="space-y-3">
             {accepted.map((app) => (
               <ApplicationRow key={app.id} application={app} />
@@ -46,7 +46,7 @@ export default function Applications() {
 
       {pending.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Pending ({pending.length})</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Pending ({pending.length})</h2>
           <div className="space-y-3">
             {pending.map((app) => (
               <ApplicationRow key={app.id} application={app} />
@@ -57,7 +57,7 @@ export default function Applications() {
 
       {past.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Past ({past.length})</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Past ({past.length})</h2>
           <div className="space-y-3 opacity-70">
             {past.map((app) => (
               <ApplicationRow key={app.id} application={app} />
@@ -75,16 +75,16 @@ function ApplicationRow({ application }: { application: any }) {
     <Link to={`/board/${job.id}`} className="card block hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-gray-900 truncate">{job.title}</p>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">{job.title}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
             ${job.budget} · {format(new Date(job.scheduled_date), 'MMM d, yyyy')}
           </p>
-          <p className="text-sm text-gray-600 mt-1 line-clamp-1">{application.proposal_message}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">{application.proposal_message}</p>
         </div>
         <Badge variant={applicationStatusBadge(application.status)}>{application.status}</Badge>
       </div>
       {application.status === 'accepted' && (
-        <p className="mt-2 text-sm text-green-700 font-medium">→ View booking and chat</p>
+        <p className="mt-2 text-sm text-green-700 dark:text-green-400 font-medium">→ View booking and chat</p>
       )}
     </Link>
   )

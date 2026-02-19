@@ -18,8 +18,8 @@ export default function JobCard({ job, linkTo }: JobCardProps) {
     <Link to={href} className="card block hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 truncate">{job.title}</h3>
-          <p className="text-sm text-gray-500 mt-0.5">Posted by {job.client.full_name}</p>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">{job.title}</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Posted by {job.client.full_name}</p>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
           <span className="text-lg font-bold text-brand-700">${job.budget}</span>
@@ -27,9 +27,9 @@ export default function JobCard({ job, linkTo }: JobCardProps) {
         </div>
       </div>
 
-      <p className="text-sm text-gray-600 line-clamp-2 mb-3">{job.description}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">{job.description}</p>
 
-      <div className="flex items-center gap-4 text-xs text-gray-500 flex-wrap">
+      <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 flex-wrap">
         <span className="flex items-center gap-1">
           <span>📦</span> {job.category_display}
         </span>
@@ -47,8 +47,8 @@ export default function JobCard({ job, linkTo }: JobCardProps) {
       </div>
 
       {isHauler && job.my_application && (
-        <div className="mt-3 pt-3 border-t border-gray-100">
-          <span className="text-xs text-gray-500">Your application: </span>
+        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+          <span className="text-xs text-gray-500 dark:text-gray-400">Your application: </span>
           <Badge variant={applicationStatusBadge(job.my_application.status)}>
             {job.my_application.status}
           </Badge>

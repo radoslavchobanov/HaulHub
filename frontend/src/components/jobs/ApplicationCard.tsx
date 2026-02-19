@@ -45,14 +45,14 @@ export default function ApplicationCard({ application, jobId, canAct = false }: 
             <div>
               <Link
                 to={`/haulers/${hauler.id}`}
-                className="font-semibold text-gray-900 hover:text-brand-600"
+                className="font-semibold text-gray-900 dark:text-gray-100 hover:text-brand-600"
               >
                 {hauler.full_name}
               </Link>
               {hauler.hauler_profile && (
                 <div className="flex items-center gap-2 mt-0.5">
                   <StarRating rating={parseFloat(hauler.hauler_profile.rating_avg)} size="sm" />
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
                     ({hauler.hauler_profile.review_count} reviews)
                   </span>
                 </div>
@@ -62,13 +62,13 @@ export default function ApplicationCard({ application, jobId, canAct = false }: 
               <Badge variant={applicationStatusBadge(application.status)}>
                 {application.status}
               </Badge>
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-gray-400 dark:text-gray-500">
                 {format(new Date(application.created_at), 'MMM d')}
               </span>
             </div>
           </div>
 
-          <p className="text-sm text-gray-700 mt-2">{application.proposal_message}</p>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">{application.proposal_message}</p>
 
           {canAct && application.status === 'pending' && (
             <div className="flex gap-2 mt-3">
