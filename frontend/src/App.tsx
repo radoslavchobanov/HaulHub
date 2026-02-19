@@ -18,6 +18,7 @@ import HaulerBookingDetail from './pages/hauler/BookingDetail'
 import Wallet from './pages/shared/Wallet'
 import EditProfile from './pages/shared/EditProfile'
 import HaulerProfile from './pages/shared/HaulerProfile'
+import NegotiationChat from './pages/shared/NegotiationChat'
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore()
@@ -72,6 +73,7 @@ export default function App() {
         {/* Shared authenticated */}
         <Route path="/wallet" element={<RequireAuth><Wallet /></RequireAuth>} />
         <Route path="/profile" element={<RequireAuth><EditProfile /></RequireAuth>} />
+        <Route path="/negotiate/:appId" element={<RequireAuth><NegotiationChat /></RequireAuth>} />
 
         {/* Client routes */}
         <Route path="/dashboard" element={<RequireAuth><RequireClient><Dashboard /></RequireClient></RequireAuth>} />

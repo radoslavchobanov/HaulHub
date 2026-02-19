@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { jobsApi } from '../../api/jobs'
+import { useAuthStore } from '../../stores/authStore'
+import LocationPicker from '../../components/ui/LocationPicker'
 
 const CATEGORIES = [
   { value: 'furniture_moving', label: 'Furniture Moving' },
@@ -19,23 +22,45 @@ interface JobForm {
   description: string
   category: string
   budget: string
-  location_address: string
   scheduled_date: string
 }
 
 export default function NewJob() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { user } = useAuthStore()
 
   const { register, handleSubmit, formState: { errors } } = useForm<JobForm>()
 
+  const [location, setLocation] = useState({
+    country: user?.country ?? '',
+    city: user?.city ?? '',
+    neighborhood: '',
+  })
+  const [locationError, setLocationError] = useState('')
+
   const mutation = useMutation({
-    mutationFn: (data: JobForm) => jobsApi.create(data),
+    mutationFn: (data: JobForm) =>
+      jobsApi.create({
+        ...data,
+        country: location.country,
+        city: location.city,
+        neighborhood: location.neighborhood,
+      }),
     onSuccess: ({ data }) => {
       queryClient.invalidateQueries({ queryKey: ['my-jobs'] })
       navigate(`/jobs/${data.id}`)
     },
   })
+
+  function onSubmit(data: JobForm) {
+    if (!location.country || !location.city) {
+      setLocationError('Please select a country and city.')
+      return
+    }
+    setLocationError('')
+    mutation.mutate(data)
+  }
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -45,7 +70,7 @@ export default function NewJob() {
       </div>
 
       <div className="card">
-        <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
             <label className="label">Job Title</label>
             <input
@@ -108,14 +133,14 @@ export default function NewJob() {
             </div>
           </div>
 
-          <div>
-            <label className="label">Location / Address</label>
-            <input
-              {...register('location_address', { required: 'Address is required' })}
-              className="input"
-              placeholder="e.g. 123 Main St, Brooklyn, NY 11201"
+          <div className="pt-1">
+            <LocationPicker
+              value={location}
+              onChange={(val) => setLocation({ country: val.country, city: val.city, neighborhood: val.neighborhood ?? '' })}
+              showNeighborhood
+              required
             />
-            {errors.location_address && <p className="mt-1 text-xs text-red-600">{errors.location_address.message}</p>}
+            {locationError && <p className="mt-1 text-xs text-red-600">{locationError}</p>}
           </div>
 
           {mutation.isError && (

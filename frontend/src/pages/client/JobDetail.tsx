@@ -72,7 +72,7 @@ export default function ClientJobDetail() {
               </div>
               <div className="sm:col-span-2">
                 <span className="text-navy-500 dark:text-navy-400">Location</span>
-                <p className="font-medium dark:text-white mt-0.5">{job.location_address}</p>
+                <p className="font-medium dark:text-white mt-0.5">{job.location_display}</p>
               </div>
             </div>
           </div>

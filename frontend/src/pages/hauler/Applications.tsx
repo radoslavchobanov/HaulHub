@@ -75,8 +75,11 @@ export default function Applications() {
 
 function ApplicationRow({ application }: { application: any }) {
   const job = application.job
+  const to = application.status === 'negotiating'
+    ? `/negotiate/${application.id}`
+    : `/board/${job.id}`
   return (
-    <Link to={`/board/${job.id}`} className="card block hover:shadow-md hover:border-navy-200 dark:hover:border-navy-600 transition-all duration-150">
+    <Link to={to} className="card block hover:shadow-md hover:border-navy-200 dark:hover:border-navy-600 transition-all duration-150">
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-navy-900 dark:text-white truncate">{job.title}</p>
@@ -87,6 +90,12 @@ function ApplicationRow({ application }: { application: any }) {
         </div>
         <Badge variant={applicationStatusBadge(application.status)}>{application.status}</Badge>
       </div>
+      {application.status === 'negotiating' && (
+        <p className="mt-2 text-sm text-amber-700 dark:text-amber-400 font-medium flex items-center gap-1.5">
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+          Chat in progress — tap to continue
+        </p>
+      )}
       {application.status === 'accepted' && (
         <p className="mt-2 text-sm text-green-700 dark:text-green-400 font-medium flex items-center gap-1.5">
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
