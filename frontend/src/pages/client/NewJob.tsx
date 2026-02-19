@@ -40,8 +40,8 @@ export default function NewJob() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Post a New Job</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">Describe your job and Haulers will apply to help you.</p>
+        <h1 className="text-2xl font-bold text-navy-900 dark:text-white">Post a New Job</h1>
+        <p className="text-navy-600 dark:text-navy-400 mt-1">Describe your job and Haulers will apply to help you.</p>
       </div>
 
       <div className="card">
@@ -82,7 +82,7 @@ export default function NewJob() {
             <div>
               <label className="label">Budget (USD)</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-500 dark:text-navy-400">$</span>
                 <input
                   {...register('budget', {
                     required: 'Budget is required',

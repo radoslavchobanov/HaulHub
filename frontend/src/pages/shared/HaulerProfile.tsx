@@ -22,7 +22,7 @@ export default function HaulerProfile() {
   })
 
   if (isLoading) return <PageLoader />
-  if (!hauler) return <p className="text-center text-gray-500 dark:text-gray-400">Hauler not found.</p>
+  if (!hauler) return <p className="text-center text-navy-500 dark:text-navy-400">Hauler not found.</p>
 
   const profile = hauler.hauler_profile
 
@@ -39,33 +39,33 @@ export default function HaulerProfile() {
             )}
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{hauler.full_name}</h1>
+            <h1 className="text-2xl font-bold text-navy-900 dark:text-white">{hauler.full_name}</h1>
             <div className="flex items-center gap-3 mt-2">
               {profile && (
                 <>
                   <StarRating rating={parseFloat(profile.rating_avg)} size="md" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-sm text-navy-600 dark:text-navy-400">
                     {profile.rating_avg} ({profile.review_count} review{profile.review_count !== 1 ? 's' : ''})
                   </span>
                 </>
               )}
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-sm text-navy-500 dark:text-navy-400 mt-1">
               Member since {format(new Date(hauler.created_at), 'MMMM yyyy')}
             </p>
           </div>
         </div>
 
         {profile?.bio && (
-          <div className="mt-5 pt-5 border-t border-gray-100 dark:border-gray-700">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">About</h3>
-            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{profile.bio}</p>
+          <div className="mt-5 pt-5 border-t border-navy-100 dark:border-navy-700">
+            <h3 className="font-semibold text-navy-900 dark:text-white mb-2">About</h3>
+            <p className="text-navy-700 dark:text-navy-300 whitespace-pre-line">{profile.bio}</p>
           </div>
         )}
 
         {profile?.skills && profile.skills.length > 0 && (
           <div className="mt-4">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Skills</h3>
+            <h3 className="font-semibold text-navy-900 dark:text-white mb-2">Skills</h3>
             <div className="flex flex-wrap gap-2">
               {profile.skills.map((skill: string) => (
                 <Badge key={skill} variant="blue">{skill}</Badge>
@@ -77,12 +77,12 @@ export default function HaulerProfile() {
 
       {/* Reviews */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <h2 className="text-lg font-semibold text-navy-900 dark:text-white mb-4">
           Reviews ({reviews?.length || 0})
         </h2>
         {reviews?.length === 0 && (
           <div className="card text-center py-10">
-            <p className="text-gray-500 dark:text-gray-400">No reviews yet.</p>
+            <p className="text-navy-500 dark:text-navy-400">No reviews yet.</p>
           </div>
         )}
         <div className="space-y-4">

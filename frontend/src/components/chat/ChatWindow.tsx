@@ -50,10 +50,10 @@ export default function ChatWindow({ roomId }: ChatWindowProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+    <div className="flex flex-col h-full bg-white dark:bg-navy-800 rounded-xl border border-navy-200 dark:border-navy-700">
       <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
         {messages.length === 0 && (
-          <p className="text-center text-gray-400 dark:text-gray-500 text-sm py-8">No messages yet. Say hello!</p>
+          <p className="text-center text-navy-400 dark:text-navy-500 text-sm py-8">No messages yet. Say hello!</p>
         )}
         {messages.map((msg) => {
           const isMe = msg.sender?.id === user?.id
@@ -61,7 +61,7 @@ export default function ChatWindow({ roomId }: ChatWindowProps) {
             <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-xs lg:max-w-md ${isMe ? 'order-2' : ''}`}>
                 {!isMe && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 ml-1">
+                  <p className="text-xs text-navy-500 dark:text-navy-400 mb-1 ml-1">
                     {msg.sender?.full_name || msg.sender_name}
                   </p>
                 )}
@@ -69,12 +69,12 @@ export default function ChatWindow({ roomId }: ChatWindowProps) {
                   className={`px-4 py-2 rounded-2xl text-sm ${
                     isMe
                       ? 'bg-brand-600 text-white rounded-br-sm'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-sm'
+                      : 'bg-navy-100 dark:bg-navy-700 text-navy-900 dark:text-white rounded-bl-sm'
                   }`}
                 >
                   {msg.content}
                 </div>
-                <p className={`text-xs text-gray-400 dark:text-gray-500 mt-1 ${isMe ? 'text-right' : 'text-left'} ml-1`}>
+                <p className={`text-xs text-navy-400 dark:text-navy-500 mt-1 ${isMe ? 'text-right' : 'text-left'} ml-1`}>
                   {format(new Date(msg.sent_at), 'HH:mm')}
                 </p>
               </div>
@@ -84,7 +84,7 @@ export default function ChatWindow({ roomId }: ChatWindowProps) {
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSend} className="border-t border-gray-200 dark:border-gray-700 p-3 flex gap-2">
+      <form onSubmit={handleSend} className="border-t border-navy-200 dark:border-navy-700 p-3 flex gap-2">
         <input
           type="text"
           value={input}

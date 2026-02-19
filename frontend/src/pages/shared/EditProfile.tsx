@@ -54,8 +54,8 @@ export default function EditProfile() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Profile</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">A great profile helps you get hired faster.</p>
+        <h1 className="text-2xl font-bold text-navy-900 dark:text-white">Edit Profile</h1>
+        <p className="text-navy-600 dark:text-navy-400 mt-1">A great profile helps you get hired faster.</p>
       </div>
 
       <div className="card">
@@ -81,7 +81,7 @@ export default function EditProfile() {
                   className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
                     selectedSkills.includes(skill)
                       ? 'bg-brand-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+                      : 'bg-navy-100 text-navy-700 hover:bg-navy-200 dark:bg-navy-700 dark:text-navy-200 dark:hover:bg-navy-600'
                   }`}
                 >
                   {skill}
