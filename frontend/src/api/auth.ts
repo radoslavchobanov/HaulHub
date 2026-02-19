@@ -13,6 +13,23 @@ interface GoogleAuthResponse extends AuthResponse {
   last_name?: string
 }
 
+interface OtpResponse {
+  message: string
+}
+
+interface PhoneVerifyResponse {
+  message: string
+  user: User
+}
+
+interface KycStartResponse {
+  dev_mode?: boolean
+  message?: string
+  already_tier?: string
+  client_secret?: string
+  verification_session_id?: string
+}
+
 export const authApi = {
   register: (data: {
     email: string
@@ -31,6 +48,18 @@ export const authApi = {
 
   me: () => apiClient.get<User>('/auth/me/'),
 
+  updateUser: (data: Partial<Pick<User, 'first_name' | 'last_name' | 'phone' | 'country' | 'city'>>) =>
+    apiClient.patch<User>('/auth/me/', data),
+
   updateProfile: (data: FormData | Record<string, unknown>) =>
     apiClient.patch<User>('/auth/profile/', data),
+
+  sendOtp: (phone: string) =>
+    apiClient.post<OtpResponse>('/auth/phone/send-otp/', { phone }),
+
+  verifyOtp: (phone: string, otp: string) =>
+    apiClient.post<PhoneVerifyResponse>('/auth/phone/verify/', { phone, otp }),
+
+  kycStart: () =>
+    apiClient.post<KycStartResponse>('/auth/kyc/start/'),
 }

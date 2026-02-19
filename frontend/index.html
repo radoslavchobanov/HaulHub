@@ -4,8 +4,22 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HaulHub — Find trusted help for any physical job</title>
-    <meta name="description" content="HaulHub connects clients who need physical labor with trusted haulers in their area." />
+    <title>HaulHub — Trusted haulers for any physical job</title>
+    <meta name="description" content="HaulHub connects clients who need physical labor with trusted, vetted haulers in their area. Post a job or find work today." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Prevent flash of unstyled content for dark mode -->
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('haulhub-theme')
+          if (theme && JSON.parse(theme).state && JSON.parse(theme).state.isDark) {
+            document.documentElement.classList.add('dark')
+          }
+        } catch (_) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

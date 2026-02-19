@@ -19,6 +19,7 @@ class Review(models.Model):
     )
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(blank=True)
+    is_flagged = models.BooleanField(default=False)  # flagged reviews excluded from rating_avg
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

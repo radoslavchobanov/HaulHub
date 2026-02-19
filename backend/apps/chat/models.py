@@ -5,11 +5,22 @@ from django.conf import settings
 
 class ChatRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    booking = models.OneToOneField('bookings.Booking', on_delete=models.CASCADE, related_name='chat_room')
+    booking = models.OneToOneField(
+        'bookings.Booking', on_delete=models.CASCADE, related_name='chat_room',
+        null=True, blank=True
+    )
+    application = models.OneToOneField(
+        'jobs.JobApplication', on_delete=models.CASCADE, related_name='chat_room',
+        null=True, blank=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Chat: {self.booking.job.title}'
+        if self.booking:
+            return f'Chat: {self.booking.job.title}'
+        if self.application:
+            return f'Chat (negotiating): {self.application.job.title}'
+        return f'Chat: {self.id}'
 
 
 class Message(models.Model):
@@ -23,6 +34,8 @@ class Message(models.Model):
     content = models.TextField()
     sent_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    # Set by keyword filter when off-platform solicitation patterns are detected
+    is_flagged = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['sent_at']

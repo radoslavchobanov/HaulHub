@@ -44,3 +44,6 @@ frontend/.vite/
 .coverage
 htmlcov/
 .pytest_cache/
+
+# Internal docs
+SECURITY_BRAINSTORM.md

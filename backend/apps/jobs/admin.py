@@ -6,7 +6,7 @@ from .models import Job, JobApplication
 class JobAdmin(admin.ModelAdmin):
     list_display = ('title', 'client', 'category', 'budget', 'status', 'scheduled_date', 'created_at')
     list_filter = ('status', 'category')
-    search_fields = ('title', 'client__email', 'location_address')
+    search_fields = ('title', 'client__email', 'city', 'neighborhood')
     ordering = ('-created_at',)
 
 

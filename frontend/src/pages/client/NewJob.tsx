@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { jobsApi } from '../../api/jobs'
+import { useAuthStore } from '../../stores/authStore'
+import LocationPicker from '../../components/ui/LocationPicker'
 
 const CATEGORIES = [
   { value: 'furniture_moving', label: 'Furniture Moving' },
@@ -19,33 +22,55 @@ interface JobForm {
   description: string
   category: string
   budget: string
-  location_address: string
   scheduled_date: string
 }
 
 export default function NewJob() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { user } = useAuthStore()
 
   const { register, handleSubmit, formState: { errors } } = useForm<JobForm>()
 
+  const [location, setLocation] = useState({
+    country: user?.country ?? '',
+    city: user?.city ?? '',
+    neighborhood: '',
+  })
+  const [locationError, setLocationError] = useState('')
+
   const mutation = useMutation({
-    mutationFn: (data: JobForm) => jobsApi.create(data),
+    mutationFn: (data: JobForm) =>
+      jobsApi.create({
+        ...data,
+        country: location.country,
+        city: location.city,
+        neighborhood: location.neighborhood,
+      }),
     onSuccess: ({ data }) => {
       queryClient.invalidateQueries({ queryKey: ['my-jobs'] })
       navigate(`/jobs/${data.id}`)
     },
   })
 
+  function onSubmit(data: JobForm) {
+    if (!location.country || !location.city) {
+      setLocationError('Please select a country and city.')
+      return
+    }
+    setLocationError('')
+    mutation.mutate(data)
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Post a New Job</h1>
-        <p className="text-gray-600 mt-1">Describe your job and Haulers will apply to help you.</p>
+        <h1 className="text-2xl font-bold text-navy-900 dark:text-white">Post a New Job</h1>
+        <p className="text-navy-600 dark:text-navy-400 mt-1">Describe your job and Haulers will apply to help you.</p>
       </div>
 
       <div className="card">
-        <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
             <label className="label">Job Title</label>
             <input
@@ -82,7 +107,7 @@ export default function NewJob() {
             <div>
               <label className="label">Budget (USD)</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-500 dark:text-navy-400">$</span>
                 <input
                   {...register('budget', {
                     required: 'Budget is required',
@@ -108,18 +133,18 @@ export default function NewJob() {
             </div>
           </div>
 
-          <div>
-            <label className="label">Location / Address</label>
-            <input
-              {...register('location_address', { required: 'Address is required' })}
-              className="input"
-              placeholder="e.g. 123 Main St, Brooklyn, NY 11201"
+          <div className="pt-1">
+            <LocationPicker
+              value={location}
+              onChange={(val) => setLocation({ country: val.country, city: val.city, neighborhood: val.neighborhood ?? '' })}
+              showNeighborhood
+              required
             />
-            {errors.location_address && <p className="mt-1 text-xs text-red-600">{errors.location_address.message}</p>}
+            {locationError && <p className="mt-1 text-xs text-red-600">{locationError}</p>}
           </div>
 
           {mutation.isError && (
-            <p className="text-sm text-red-600 bg-red-50 rounded-lg p-3">
+            <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg p-3">
               {(mutation.error as any)?.response?.data?.detail || 'Failed to post job. Please try again.'}
             </p>
           )}

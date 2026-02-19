@@ -11,6 +11,8 @@ class Wallet(models.Model):
     )
     available_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     escrow_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    # Held back from chargebacks; released after RESERVE_RELEASE_DAYS
+    reserve_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -22,6 +24,9 @@ class Transaction(models.Model):
         ('deposit', 'Deposit'),
         ('escrow_lock', 'Escrow Lock'),
         ('escrow_release', 'Escrow Release'),
+        ('escrow_refund', 'Escrow Refund'),
+        ('reserve_hold', 'Reserve Hold'),
+        ('reserve_release', 'Reserve Release'),
         ('withdrawal', 'Withdrawal'),
     ]
 
@@ -31,6 +36,10 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     reference_id = models.CharField(max_length=255, blank=True)
     description = models.CharField(max_length=255, blank=True)
+    # Deposit hold: funds not credited to wallet until available_at (None = immediate)
+    available_at = models.DateTimeField(null=True, blank=True)
+    # Whether the hold/reserve Celery task has already processed this record
+    is_processed = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

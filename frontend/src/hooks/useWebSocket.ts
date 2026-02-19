@@ -6,6 +6,7 @@ interface WSMessage {
   id: string
   sender_id: string
   sender_name: string
+  sender_type?: 'client' | 'hauler'
   content: string
   sent_at: string
   is_read: boolean
@@ -21,7 +22,8 @@ export function useWebSocket(
   const connect = useCallback(() => {
     if (!roomId || !accessToken) return
 
-    const wsBase = import.meta.env.VITE_WS_URL || `ws://${window.location.host}/ws`
+    const proto = window.location.protocol === 'https:' ? 'wss' : 'ws'
+    const wsBase = `${proto}://${window.location.host}/ws`
     const url = `${wsBase}/chat/${roomId}/?token=${accessToken}`
 
     ws.current = new WebSocket(url)
@@ -38,8 +40,14 @@ export function useWebSocket(
           last_name: data.sender_name.split(' ').slice(1).join(' '),
           email: '',
           phone: '',
-          user_type: 'client',
+          phone_verified: false,
+          user_type: data.sender_type ?? (user?.id === data.sender_id ? (user?.user_type ?? 'client') : 'client'),
           auth_provider: 'email',
+          country: '',
+          city: '',
+          account_status: 'active',
+          verification_tier: 'unverified',
+          cancellation_rate: null,
           created_at: '',
         },
         content: data.content,
