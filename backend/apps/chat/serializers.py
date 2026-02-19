@@ -22,19 +22,37 @@ class ChatRoomSerializer(serializers.ModelSerializer):
 
     def get_booking_info(self, obj):
         request = self.context.get('request')
-        booking = obj.booking
-        other_party = None
-        if request:
-            if booking.client == request.user:
-                other_party = UserSerializer(booking.hauler).data
-            else:
-                other_party = UserSerializer(booking.client).data
-        return {
-            'id': str(booking.id),
-            'job_title': booking.job.title,
-            'status': booking.status,
-            'other_party': other_party,
-        }
+        if obj.booking:
+            booking = obj.booking
+            other_party = None
+            if request:
+                if booking.client == request.user:
+                    other_party = UserSerializer(booking.hauler).data
+                else:
+                    other_party = UserSerializer(booking.client).data
+            return {
+                'id': str(booking.id),
+                'job_title': booking.job.title,
+                'status': booking.status,
+                'other_party': other_party,
+                'application_id': None,
+            }
+        if obj.application:
+            app = obj.application
+            other_party = None
+            if request:
+                if app.job.client == request.user:
+                    other_party = UserSerializer(app.hauler).data
+                else:
+                    other_party = UserSerializer(app.job.client).data
+            return {
+                'id': None,
+                'job_title': app.job.title,
+                'status': 'negotiating',
+                'other_party': other_party,
+                'application_id': str(app.id),
+            }
+        return {'id': None, 'job_title': '', 'status': 'unknown', 'other_party': None, 'application_id': None}
 
     def get_last_message(self, obj):
         msg = obj.messages.order_by('-sent_at').first()
