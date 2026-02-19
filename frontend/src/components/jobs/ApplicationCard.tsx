@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import { jobsApi } from '../../api/jobs'
 import Badge, { applicationStatusBadge } from '../ui/Badge'
 import StarRating from '../ui/StarRating'
@@ -14,14 +15,25 @@ interface ApplicationCardProps {
 
 export default function ApplicationCard({ application, jobId, canAct = false }: ApplicationCardProps) {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const hauler = application.hauler
 
-  const accept = useMutation({
-    mutationFn: () => jobsApi.acceptApplication(application.id),
+  const startChat = useMutation({
+    mutationFn: () => jobsApi.startChat(application.id),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ['job-applications', jobId] })
+      navigate(`/negotiate/${res.data.id}`)
+    },
+  })
+
+  const hire = useMutation({
+    mutationFn: () => jobsApi.hire(application.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job', jobId] })
       queryClient.invalidateQueries({ queryKey: ['job-applications', jobId] })
       queryClient.invalidateQueries({ queryKey: ['wallet'] })
+      // Navigate to job detail to see the booking link
+      navigate(`/jobs/${jobId}`)
     },
   })
 
@@ -32,7 +44,7 @@ export default function ApplicationCard({ application, jobId, canAct = false }: 
     },
   })
 
-  const isLoading = accept.isPending || reject.isPending
+  const isLoading = startChat.isPending || hire.isPending || reject.isPending
 
   return (
     <div className="card">
@@ -73,25 +85,50 @@ export default function ApplicationCard({ application, jobId, canAct = false }: 
           {canAct && application.status === 'pending' && (
             <div className="flex gap-2 mt-3">
               <button
-                onClick={() => accept.mutate()}
+                onClick={() => startChat.mutate()}
                 disabled={isLoading}
                 className="btn-primary text-sm"
               >
-                {accept.isPending ? 'Accepting...' : 'Accept'}
+                {startChat.isPending ? 'Opening chat...' : 'Chat with Hauler'}
               </button>
               <button
                 onClick={() => reject.mutate()}
                 disabled={isLoading}
                 className="btn-secondary text-sm"
               >
-                {reject.isPending ? 'Rejecting...' : 'Decline'}
+                {reject.isPending ? 'Declining...' : 'Decline'}
               </button>
             </div>
           )}
 
-          {accept.isError && (
+          {canAct && application.status === 'negotiating' && (
+            <div className="flex gap-2 mt-3">
+              <Link
+                to={`/negotiate/${application.id}`}
+                className="btn-secondary text-sm"
+              >
+                Continue Chat
+              </Link>
+              <button
+                onClick={() => hire.mutate()}
+                disabled={isLoading}
+                className="btn-primary text-sm"
+              >
+                {hire.isPending ? 'Hiring...' : 'Hire this Hauler'}
+              </button>
+              <button
+                onClick={() => reject.mutate()}
+                disabled={isLoading}
+                className="btn-danger text-sm"
+              >
+                {reject.isPending ? 'Declining...' : 'Decline'}
+              </button>
+            </div>
+          )}
+
+          {(startChat.isError || hire.isError) && (
             <p className="text-sm text-red-600 mt-2">
-              {(accept.error as any)?.response?.data?.error || 'Failed to accept. Check your wallet balance.'}
+              {((startChat.error || hire.error) as any)?.response?.data?.error || 'Action failed. Check your wallet balance.'}
             </p>
           )}
         </div>

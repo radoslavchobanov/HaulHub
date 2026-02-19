@@ -21,18 +21,35 @@ export default function Badge({ children, variant = 'gray' }: BadgeProps) {
 }
 
 export function jobStatusBadge(status: string) {
-  const map: Record<string, 'blue' | 'yellow' | 'green' | 'red' | 'gray'> = {
+  const map: Record<string, 'blue' | 'yellow' | 'green' | 'red' | 'gray' | 'purple'> = {
     open: 'blue',
     assigned: 'yellow',
+    in_progress: 'yellow',
+    pending_completion: 'purple',
     completed: 'green',
     cancelled: 'red',
   }
   return map[status] ?? 'gray'
 }
 
+export function bookingStatusBadge(status: string) {
+  const map: Record<string, 'blue' | 'yellow' | 'green' | 'red' | 'gray' | 'purple'> = {
+    assigned: 'yellow',
+    in_progress: 'yellow',
+    pending_completion: 'purple',
+    completed: 'green',
+    disputed: 'red',
+    resolved_hauler: 'green',
+    resolved_client: 'green',
+    cancelled: 'gray',
+  }
+  return map[status] ?? 'gray'
+}
+
 export function applicationStatusBadge(status: string) {
-  const map: Record<string, 'yellow' | 'green' | 'red'> = {
+  const map: Record<string, 'yellow' | 'green' | 'red' | 'purple'> = {
     pending: 'yellow',
+    negotiating: 'purple',
     accepted: 'green',
     rejected: 'red',
   }
