@@ -25,6 +25,7 @@
     @apply inline-flex items-center justify-center gap-2 px-4 py-2.5
            bg-white text-navy-700 text-sm font-semibold rounded-xl
            border border-navy-200 hover:bg-navy-50 hover:border-navy-300
+           active:bg-navy-100 dark:active:bg-navy-600
            focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2
            transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
            dark:bg-navy-800 dark:text-navy-200 dark:border-navy-700
@@ -43,7 +44,7 @@
            text-sm text-navy-900 placeholder-navy-400
            focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
            transition-all duration-150
-           dark:bg-navy-800 dark:border-navy-700 dark:text-slate-100 dark:placeholder-navy-500;
+           dark:bg-navy-800 dark:border-navy-700 dark:text-slate-100 dark:placeholder-navy-400;
   }
   .label {
     @apply block text-sm font-medium text-navy-700 mb-1.5 dark:text-navy-300;
