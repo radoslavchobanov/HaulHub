@@ -1,23 +1,32 @@
 from decimal import Decimal
+from datetime import timedelta
+
 from django.db import transaction
 from django.utils import timezone
-from datetime import timedelta
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from config.throttles import JobCreationThrottle, JobApplicationThrottle, EscrowLockThrottle
 from .models import Job, JobApplication
 from .serializers import JobSerializer, CreateJobSerializer, JobApplicationSerializer
 
 
 @api_view(['GET', 'POST'])
+@throttle_classes([JobCreationThrottle])
 def jobs(request):
     if request.method == 'GET':
         qs = Job.objects.filter(status='open').select_related('client', 'client__hauler_profile')
 
-        # Optional category filter
+        country  = request.query_params.get('country')
+        city     = request.query_params.get('city')
         category = request.query_params.get('category')
+
+        if country:
+            qs = qs.filter(country__iexact=country)
+        if city:
+            qs = qs.filter(city__iexact=city)
         if category:
             qs = qs.filter(category=category)
 
@@ -26,6 +35,15 @@ def jobs(request):
     if request.method == 'POST':
         if request.user.user_type != 'client':
             return Response({'error': 'Only clients can post jobs.'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Enforce max 3 open jobs per client at any time (task 20)
+        open_count = Job.objects.filter(client=request.user, status='open').count()
+        if open_count >= 3:
+            return Response(
+                {'error': 'You can have at most 3 open jobs at a time. Cancel or complete an existing job first.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         serializer = CreateJobSerializer(data=request.data)
         if serializer.is_valid():
             job = serializer.save(client=request.user)
@@ -50,6 +68,12 @@ def job_detail(request, pk):
         if action == 'cancel' and job.status == 'open':
             job.status = 'cancelled'
             job.save(update_fields=['status', 'updated_at'])
+            # Apply cancellation strike to client (dev: thresholds × 100 = effectively off)
+            try:
+                from apps.users.strikes import apply_cancellation_strike
+                apply_cancellation_strike(request.user)
+            except Exception:
+                pass
             return Response(JobSerializer(job).data)
         return Response({'error': 'Invalid action or job cannot be cancelled.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -63,6 +87,7 @@ def my_jobs(request):
 
 
 @api_view(['GET', 'POST'])
+@throttle_classes([JobApplicationThrottle])
 def job_applications(request, pk):
     try:
         job = Job.objects.get(id=pk)
@@ -92,24 +117,53 @@ def job_applications(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PATCH'])
+@api_view(['GET', 'PATCH'])
+@throttle_classes([EscrowLockThrottle])
 def application_detail(request, pk):
     try:
         app = JobApplication.objects.select_related('job', 'hauler').get(id=pk)
     except JobApplication.DoesNotExist:
         return Response({'error': 'Application not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+    # Both the client and the hauler may GET their application
+    if request.method == 'GET':
+        if app.job.client != request.user and app.hauler != request.user:
+            return Response({'error': 'Forbidden.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response(JobApplicationSerializer(app).data)
+
+    # All PATCH actions are client-only
     if app.job.client != request.user:
         return Response({'error': 'Forbidden.'}, status=status.HTTP_403_FORBIDDEN)
 
     action = request.data.get('action')
 
     if action == 'reject':
+        if app.status not in ('pending', 'negotiating'):
+            return Response({'error': 'Application cannot be rejected at this stage.'}, status=status.HTTP_400_BAD_REQUEST)
+        from apps.chat.models import ChatRoom
+        try:
+            app.chat_room.delete()
+        except ChatRoom.DoesNotExist:
+            pass
         app.status = 'rejected'
         app.save(update_fields=['status'])
         return Response(JobApplicationSerializer(app).data)
 
-    if action == 'accept':
+    if action == 'chat':
+        if app.status != 'pending':
+            return Response({'error': 'A chat can only be started for pending applications.'}, status=status.HTTP_400_BAD_REQUEST)
+        if app.job.status != 'open':
+            return Response({'error': 'This job is no longer accepting negotiations.'}, status=status.HTTP_400_BAD_REQUEST)
+        from apps.chat.models import ChatRoom
+        with transaction.atomic():
+            ChatRoom.objects.create(application=app)
+            app.status = 'negotiating'
+            app.save(update_fields=['status'])
+        return Response(JobApplicationSerializer(app).data)
+
+    if action == 'hire':
+        if app.status != 'negotiating':
+            return Response({'error': 'You can only hire a hauler you are currently negotiating with.'}, status=status.HTTP_400_BAD_REQUEST)
         if app.job.status != 'open':
             return Response({'error': 'This job is no longer available.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -117,19 +171,17 @@ def application_detail(request, pk):
         from apps.bookings.models import Booking
         from apps.chat.models import ChatRoom
 
-        try:
-            client_wallet = Wallet.objects.get(user=request.user)
-        except Wallet.DoesNotExist:
-            return Response({'error': 'Wallet not found.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if client_wallet.available_balance < app.job.budget:
-            return Response(
-                {'error': 'Insufficient wallet balance. Please deposit funds before accepting.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
         with transaction.atomic():
-            client_wallet = Wallet.objects.select_for_update().get(user=request.user)
+            try:
+                client_wallet = Wallet.objects.select_for_update().get(user=request.user)
+            except Wallet.DoesNotExist:
+                return Response({'error': 'Wallet not found.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if client_wallet.available_balance < app.job.budget:
+                return Response(
+                    {'error': 'Insufficient wallet balance. Please deposit funds before hiring.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             client_wallet.available_balance -= app.job.budget
             client_wallet.escrow_balance += app.job.budget
             client_wallet.save()
@@ -152,7 +204,14 @@ def application_detail(request, pk):
                 auto_release_at=now + timedelta(days=14),
             )
 
-            ChatRoom.objects.create(booking=booking)
+            # Promote the negotiation chat room to the booking's chat room
+            try:
+                chat_room = app.chat_room
+                chat_room.booking = booking
+                chat_room.application = None
+                chat_room.save(update_fields=['booking', 'application'])
+            except ChatRoom.DoesNotExist:
+                ChatRoom.objects.create(booking=booking)
 
             app.job.status = 'assigned'
             app.job.save(update_fields=['status', 'updated_at'])
@@ -161,10 +220,12 @@ def application_detail(request, pk):
             app.save(update_fields=['status'])
 
             JobApplication.objects.filter(job=app.job).exclude(id=app.id).update(status='rejected')
+            # Clean up any remaining negotiation rooms for rejected applications
+            ChatRoom.objects.filter(application__job=app.job).delete()
 
         return Response(JobApplicationSerializer(app).data)
 
-    return Response({'error': 'Invalid action. Use "accept" or "reject".'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'error': 'Invalid action. Use "chat", "hire", or "reject".'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
